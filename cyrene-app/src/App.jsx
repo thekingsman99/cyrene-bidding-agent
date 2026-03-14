@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ChatBot from './ChatBot'
+import ManualTenderForm from './ManualTenderForm'
 
 function App() {
   const [activePlatform, setActivePlatform] = useState('zppa')
@@ -10,7 +11,6 @@ function App() {
   const [activeTab, setActiveTab] = useState('search')
   const [bidLoading, setBidLoading] = useState(false)
 
-  // Fetch tenders FROM your backend server
   async function findTenders() {
     setTenders([])
     setLoading(true)
@@ -24,17 +24,13 @@ function App() {
     setLoading(false)
   }
 
-  // Generate and save a bid document
   async function prepareBid(tender) {
     setBidLoading(tender.id)
     try {
       const response = await fetch('http://localhost:3001/bids/prepare', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenderId: tender.id,
-          platform: activePlatform
-        })
+        body: JSON.stringify({ tenderId: tender.id, platform: activePlatform })
       })
       const data = await response.json()
       setSelectedBid(data.bid)
@@ -45,7 +41,6 @@ function App() {
     setBidLoading(false)
   }
 
-  // Load saved bids from server
   async function loadSavedBids() {
     try {
       const response = await fetch('http://localhost:3001/bids')
@@ -56,45 +51,42 @@ function App() {
     }
   }
 
-  // Colors based on active platform
   const color = activePlatform === 'zppa' ? '#00C896' : '#3B9EFF'
+
+  const TABS = [
+    { id: 'search', label: 'Find Tenders' },
+    { id: 'manual', label: 'Add Real Tender' },
+    { id: 'bid', label: 'Bid Document' },
+    { id: 'saved', label: 'Saved Bids' },
+    { id: 'ai', label: 'AI Consultant' },
+  ]
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#0B0F1A' }}>
 
       {/* NAVBAR */}
       <div style={{
-        backgroundColor: '#111827',
-        padding: '16px 32px',
+        backgroundColor: '#111827', padding: '16px 32px',
         borderBottom: '2px solid #00C896',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
       }}>
         <div>
           <h1 style={{ color: '#00C896', fontSize: '20px', marginBottom: '2px' }}>
             Cyrene Technologies
           </h1>
           <p style={{ color: '#64748B', fontSize: '12px' }}>
-            AI Bidding Agent — ZPPA & UNGM
+            AI Bidding Agent - ZPPA and UNGM
           </p>
         </div>
-        <span style={{ color: '#00C896', fontSize: '13px' }}>🟢 System Online</span>
+        <span style={{ color: '#00C896', fontSize: '13px' }}>System Online</span>
       </div>
 
-      {/* MAIN TABS */}
+      {/* TABS */}
       <div style={{
-        display: 'flex',
-        borderBottom: '1px solid #1E2A3A',
-        padding: '0 32px',
-        backgroundColor: '#111827'
+        display: 'flex', borderBottom: '1px solid #1E2A3A',
+        padding: '0 32px', backgroundColor: '#111827'
       }}>
-        {[
-          { id: 'search', label: '🔍 Find Tenders' },
-          { id: 'bid', label: '📄 Bid Document' },
-          { id: 'saved', label: '💾 Saved Bids' },
-          { id: 'ai', label: '🧠 AI Consultant' }
-        ].map(tab => (
+        {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => {
@@ -102,14 +94,11 @@ function App() {
               if (tab.id === 'saved') loadSavedBids()
             }}
             style={{
-              background: 'none',
-              border: 'none',
+              background: 'none', border: 'none',
               borderBottom: activeTab === tab.id ? '2px solid #00C896' : '2px solid transparent',
               color: activeTab === tab.id ? '#00C896' : '#64748B',
-              padding: '14px 20px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              fontWeight: activeTab === tab.id ? 'bold' : 'normal'
+              padding: '14px 20px', cursor: 'pointer',
+              fontSize: '13px', fontWeight: activeTab === tab.id ? 'bold' : 'normal'
             }}
           >
             {tab.label}
@@ -117,52 +106,27 @@ function App() {
         ))}
       </div>
 
-      {/* ===== SEARCH TAB ===== */}
+      {/* SEARCH TAB */}
       {activeTab === 'search' && (
         <div style={{ padding: '32px' }}>
-
-          {/* Platform selector */}
           <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', justifyContent: 'center' }}>
             {['zppa', 'ungm'].map(platform => (
               <button
                 key={platform}
                 onClick={() => { setActivePlatform(platform); setTenders([]) }}
                 style={{
-                  padding: '10px 28px',
-                  borderRadius: '8px',
+                  padding: '10px 28px', borderRadius: '8px',
                   border: `2px solid ${activePlatform === platform ? color : '#1E2A3A'}`,
                   backgroundColor: activePlatform === platform ? `${color}20` : '#111827',
                   color: activePlatform === platform ? color : '#64748B',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
+                  fontSize: '14px', fontWeight: 'bold', cursor: 'pointer'
                 }}
               >
-                {platform === 'zppa' ? '🇿🇲 ZPPA Tenders' : '🌍 UNGM Tenders'}
+                {platform === 'zppa' ? 'ZPPA Tenders' : 'UNGM Tenders'}
               </button>
             ))}
           </div>
 
-          {/* Info box */}
-          <div style={{
-            maxWidth: '600px', margin: '0 auto 24px',
-            backgroundColor: '#111827',
-            border: `1px solid ${color}30`,
-            borderRadius: '10px', padding: '14px 20px',
-            textAlign: 'center'
-          }}>
-            {activePlatform === 'zppa' ? (
-              <p style={{ color: '#94A3B8', fontSize: '13px' }}>
-                🇿🇲 <strong style={{ color: '#00C896' }}>ZPPA e-GP Portal</strong> — Zambian government tenders in Kwacha
-              </p>
-            ) : (
-              <p style={{ color: '#94A3B8', fontSize: '13px' }}>
-                🌍 <strong style={{ color: '#3B9EFF' }}>UNGM Portal</strong> — United Nations tenders in USD
-              </p>
-            )}
-          </div>
-
-          {/* Search button */}
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
             <button
               onClick={findTenders}
@@ -175,11 +139,10 @@ function App() {
                 borderRadius: '8px', cursor: loading ? 'not-allowed' : 'pointer'
               }}
             >
-              {loading ? `⏳ Searching ${activePlatform.toUpperCase()}...` : `🔍 Find ${activePlatform.toUpperCase()} Tenders`}
+              {loading ? 'Searching...' : `Find ${activePlatform.toUpperCase()} Tenders`}
             </button>
           </div>
 
-          {/* Tender cards */}
           {tenders.length > 0 && (
             <div>
               <p style={{ textAlign: 'center', color: '#64748B', fontSize: '13px', marginBottom: '20px' }}>
@@ -188,10 +151,8 @@ function App() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
                 {tenders.map(tender => (
                   <div key={tender.id} style={{
-                    backgroundColor: '#111827',
-                    border: `1px solid ${color}30`,
-                    borderRadius: '12px', padding: '20px',
-                    width: '280px'
+                    backgroundColor: '#111827', border: `1px solid ${color}30`,
+                    borderRadius: '12px', padding: '20px', width: '280px'
                   }}>
                     <div style={{ fontSize: '11px', color: '#475569', fontFamily: 'monospace', marginBottom: '8px' }}>
                       {tender.id}
@@ -222,7 +183,7 @@ function App() {
                         cursor: 'pointer', fontSize: '12px', width: '100%'
                       }}
                     >
-                      {bidLoading === tender.id ? '⏳ Generating...' : '📄 Prepare Bid →'}
+                      {bidLoading === tender.id ? 'Generating...' : 'Prepare Bid'}
                     </button>
                   </div>
                 ))}
@@ -232,7 +193,35 @@ function App() {
         </div>
       )}
 
-      {/* ===== BID DOCUMENT TAB ===== */}
+      {/* MANUAL TENDER TAB */}
+      {activeTab === 'manual' && (
+        <div style={{ padding: '32px', maxWidth: '700px', margin: '0 auto' }}>
+          <h2 style={{ color: '#F1F5F9', fontSize: '18px', marginBottom: '8px' }}>
+            Add a Real Tender from ZPPA or UNGM
+          </h2>
+          <p style={{ color: '#64748B', fontSize: '13px', marginBottom: '16px', lineHeight: '1.7' }}>
+            Log in to eprocure.zppa.org.zm or ungm.org, find a tender,
+            copy the details below and the AI will prepare your complete bid document.
+          </p>
+          <div style={{
+            backgroundColor: '#111827', border: '1px solid #1E2A3A',
+            borderRadius: '10px', padding: '16px 20px', marginBottom: '24px'
+          }}>
+            <div style={{ fontSize: '12px', color: '#64748B', lineHeight: '2' }}>
+              <div>Step 1 — Go to eprocure.zppa.org.zm and log in with your credentials</div>
+              <div>Step 2 — Find a tender you want to bid on</div>
+              <div>Step 3 — Copy the tender details into the form below</div>
+              <div>Step 4 — Click Generate and AI writes your complete bid in seconds</div>
+            </div>
+          </div>
+          <ManualTenderForm onBidGenerated={(bid) => {
+            setSelectedBid(bid)
+            setActiveTab('bid')
+          }} />
+        </div>
+      )}
+
+      {/* BID DOCUMENT TAB */}
       {activeTab === 'bid' && (
         <div style={{ padding: '32px', maxWidth: '800px', margin: '0 auto' }}>
           {selectedBid ? (
@@ -253,7 +242,7 @@ function App() {
                     borderRadius: '8px', padding: '8px 16px', textAlign: 'center'
                   }}>
                     <div style={{ color: '#00C896', fontWeight: 'bold', fontSize: '14px' }}>
-                      {selectedBid.currency} {selectedBid.value.toLocaleString()}
+                      {selectedBid.currency} {Number(selectedBid.value).toLocaleString()}
                     </div>
                     <div style={{ color: '#64748B', fontSize: '11px' }}>Bid Value</div>
                   </div>
@@ -262,8 +251,7 @@ function App() {
                   backgroundColor: '#0B0F1A', border: '1px solid #1E2A3A',
                   borderRadius: '8px', padding: '20px',
                   color: '#E2E8F0', fontSize: '13px',
-                  lineHeight: '1.8', overflowX: 'auto',
-                  whiteSpace: 'pre-wrap'
+                  lineHeight: '1.8', overflowX: 'auto', whiteSpace: 'pre-wrap'
                 }}>
                   {selectedBid.document}
                 </pre>
@@ -285,7 +273,7 @@ function App() {
                     fontSize: '14px', fontWeight: 'bold'
                   }}
                 >
-                  ⬇️ Download Bid Document
+                  Download Bid Document
                 </button>
                 <button
                   onClick={() => setActiveTab('search')}
@@ -295,28 +283,26 @@ function App() {
                     borderRadius: '8px', cursor: 'pointer', fontSize: '14px'
                   }}
                 >
-                  ← Back to Search
+                  Back to Search
                 </button>
               </div>
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '60px', color: '#64748B' }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📄</div>
-              <p>No bid prepared yet. Go to Find Tenders and click Prepare Bid on any tender.</p>
+              <p>No bid prepared yet. Go to Add Real Tender or Find Tenders to prepare a bid.</p>
             </div>
           )}
         </div>
       )}
 
-      {/* ===== SAVED BIDS TAB ===== */}
+      {/* SAVED BIDS TAB */}
       {activeTab === 'saved' && (
         <div style={{ padding: '32px', maxWidth: '900px', margin: '0 auto' }}>
           <h2 style={{ color: '#F1F5F9', fontSize: '18px', marginBottom: '20px' }}>
-            💾 Saved Bids ({savedBids.length})
+            Saved Bids ({savedBids.length})
           </h2>
           {savedBids.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px', color: '#64748B' }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
               <p>No bids saved yet. Prepare a bid first.</p>
             </div>
           ) : (
@@ -340,7 +326,7 @@ function App() {
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ color: '#00C896', fontWeight: 'bold', fontSize: '14px' }}>
-                      {bid.currency} {bid.value.toLocaleString()}
+                      {bid.currency} {Number(bid.value).toLocaleString()}
                     </div>
                     <div style={{
                       backgroundColor: '#00C89620', color: '#00C896',
@@ -358,7 +344,7 @@ function App() {
                         cursor: 'pointer', fontSize: '11px'
                       }}
                     >
-                      View →
+                      View
                     </button>
                   </div>
                 </div>
@@ -368,7 +354,7 @@ function App() {
         </div>
       )}
 
-      {/* ===== AI CONSULTANT TAB ===== */}
+      {/* AI CONSULTANT TAB */}
       {activeTab === 'ai' && (
         <div style={{ paddingTop: '32px' }}>
           <ChatBot />

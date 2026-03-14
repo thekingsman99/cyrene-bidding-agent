@@ -1,0 +1,61 @@
+[
+  {
+    "id": "ZPPA/OPEN/ICT/2026/001",
+    "title": "Supply and Delivery of ICT Equipment",
+    "ministry": "Ministry of Technology and Science",
+    "deadline": "2026-03-30",
+    "value": 1200000,
+    "currency": "ZMW",
+    "category": "ICT",
+    "status": "OPEN",
+    "requirements": [
+      "PACRA",
+      "TCC",
+      "TPIN",
+      "Audited Accounts",
+      "Bank Guarantee"
+    ],
+    "isICT": true,
+    "source": "Demo Data",
+    "scrapedAt": "2026-03-14T21:21:31.762743"
+  },
+  {
+    "id": "ZPPA/OPEN/ICT/2026/002",
+    "title": "Supply of Laptops and Accessories",
+    "ministry": "Ministry of Education",
+    "deadline": "2026-04-05",
+    "value": 850000,
+    "currency": "ZMW",
+    "category": "ICT",
+    "status": "OPEN",
+    "requirements": [
+      "PACRA",
+      "TCC",
+      "TPIN",
+      "Manufacturer Authorization"
+    ],
+    "isICT": true,
+    "source": "Demo Data",
+    "scrapedAt": "2026-03-14T21:21:31.762758"
+  },
+  {
+    "id": "ZPPA/OPEN/ICT/2026/003",
+    "title": "Network Infrastructure Setup",
+    "ministry": "Zambia Revenue Authority",
+    "deadline": "2026-04-12",
+    "value": 2800000,
+    "currency": "ZMW",
+    "category": "ICT",
+    "status": "OPEN",
+    "requirements": [
+      "PACRA",
+      "TCC",
+      "TPIN",
+      "Technical Proposal",
+      "Bank Guarantee"
+    ],
+    "isICT": true,
+    "source": "Demo Data",
+    "scrapedAt": "2026-03-14T21:21:31.762761"
+  }
+]

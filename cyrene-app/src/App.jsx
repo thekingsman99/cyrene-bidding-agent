@@ -1,3 +1,4 @@
+import ChatBot from './ChatBot'
 import { useState } from 'react'
 
 function App() {
@@ -355,10 +356,12 @@ function App() {
           </div>
         </div>
       )}
-
+{/* AI CONSULTANT CHAT */}
+<div style={{ borderTop: '1px solid #1E2A3A', paddingTop: '40px', marginTop: '20px' }}>
+  <ChatBot />
+</div>
     </div>
   )
 }
 
 export default App
- 
